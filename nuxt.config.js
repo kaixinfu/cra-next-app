@@ -39,7 +39,9 @@ module.exports = {
   /*
   ** Nuxt.js modules
   */
+  // 添加后，proxy才生效
   modules: [
+    "@nuxtjs/proxy"
   ],
   /*
   ** Build configuration
@@ -50,6 +52,16 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
+    }
+  },
+  // http://localhost:3000/api/captcha => http://localhost:7001/captcha
+  proxy: {
+    "/api/": {
+      target: "http://localhost:7001",
+      secure: false,
+      pathRewrite: {
+        "^/api": ""
+      }
     }
   }
 }
