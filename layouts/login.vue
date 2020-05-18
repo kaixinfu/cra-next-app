@@ -1,16 +1,36 @@
 <template>
     <div>
-        <div>login</div>
         <nuxt></nuxt>
-        <div>底部</div> 
     </div>
 </template>
 <script>
 export default {
     
 }
-</script> 
+</script>
 
-<style lang="stylus" scoped>
-
+<style lang="stylus">
+.login-container
+    width 100%
+    height 100%
+    .login-form
+        width 500px
+        padding 100px auto
+        margin 0 auto
+        overflow hidden
+    .logo-container
+        text-align center
+        margin-bottom 20px
+        img
+           width 200px
+    .captcha-container
+        position relative
+        width 400px
+       .captcha
+             position absolute
+             right -100px
+             img 
+                width 90px
+                height 50px
+                cursor pointer
 </style>
