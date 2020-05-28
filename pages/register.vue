@@ -17,10 +17,10 @@
                 <el-input v-model="ruleForm.nickname" placeholder="请输入昵称"></el-input>
             </el-form-item>
             <el-form-item prop="passwd" label="密码">
-                <el-input v-model="ruleForm.passwd" placeholder="请输入密码"></el-input>
+                <el-input type="password" v-model="ruleForm.passwd" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-form-item prop="repasswd" label="确认密码">
-                <el-input v-model="ruleForm.repasswd" placeholder="请再次输入密码"></el-input>
+                <el-input type="password" v-model="ruleForm.repasswd" placeholder="请再次输入密码"></el-input>
             </el-form-item>
 
             <el-form-item>
@@ -31,6 +31,8 @@
     </div>
 </template>
 <script>
+import md5 from 'md5';
+import { log } from 'util';
 export default {
     layout: "login",
     data() {
@@ -39,10 +41,10 @@ export default {
                 captchaUrl: '',
             },
             ruleForm: {
-                email: '',
-                nickname: '',
-                passwd: '',
-                repasswd: '',
+                email: '1@qq.com',
+                nickname: 'kaixin',
+                passwd: 'qwer1234',
+                repasswd: 'qwer1234',
                 captcha: ''
             },
             rules: {
@@ -79,9 +81,28 @@ export default {
             this.code.captchaUrl = '/api/captcha?_t=' + new Date().getTime();
         },
         submitForm(formName) {
-            this.$refs[formName].validate((valid) => {                
+            this.$refs[formName].validate(async (valid) => {                
                 if (valid) {
-                    console.log('通过');
+                    const data = {
+                        email: this.ruleForm.email,
+                        nickname: this.ruleForm.nickname,
+                        passwd: md5(this.ruleForm.passwd),
+                        captcha: this.ruleForm.captcha
+                    }
+                    console.log('data', data);
+                    let res = await this.$http.post('/user/register', data);
+                    console.log('res', res);
+                    // code等于0，是成功
+                    if (res.code === 0) {
+                        this.$alert('注册成功', '成功', {
+                            confirmButtonText: '去登陆',
+                            callback: () => {
+                                this.$router.push('/login')
+                            }
+                        })
+                    } else {
+                        this.$message.error(res.message);
+                    }
                 }
             });
         },
