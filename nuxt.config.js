@@ -29,7 +29,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    "@/plugins/axios"
   ],
   /*
   ** Nuxt.js dev-modules
@@ -41,7 +42,8 @@ module.exports = {
   */
   // 添加后，proxy才生效
   modules: [
-    "@nuxtjs/proxy"
+    "@nuxtjs/proxy",
+    "@nuxtjs/axios"
   ],
   /*
   ** Build configuration

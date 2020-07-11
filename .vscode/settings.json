@@ -1,0 +1,53 @@
+{
+  "git.ignoreMissingGitWarning": true,
+  "terminal.integrated.rendererType": "dom",
+  "vetur.validation.template": false,
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  // "vetur.format.defaultFormatter.js": "vscode-typescript",
+  "vetur.format.defaultFormatter.js": "prettier-eslint",
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "vetur.format.defaultFormatterOptions": {
+    "js-beautify-html": {
+      // force-aligned | force-expand-multiline
+      "wrap_attributes": "force-aligned",
+      "prettier": {
+        "semi": false,
+        "singleQuote": true
+      }
+    },
+    "prettyhtml": {
+      "printWidth": 100, //使用不同的最大行长度
+      "singleQuote": false,
+      "wrapAttributes": false, //强制换行属性（当它有多个时，默认值为false）
+      "sortAttributes": true //按字母顺序排序属性（默认值：false）
+    },
+    "prettier": {
+      "semi": false, //代码行后面需不需要生成分号
+      "singleQuote": true, //需不需要把双引号格式化成单引号
+      "trailingComma": "all" //在任何可能的多行中输入尾逗号。
+    }
+  },
+  //文本自动换行
+  "editor.wordWrap": "on",
+  "editor.renderWhitespace": "all",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "search.followSymlinks": false,
+  "window.zoomLevel": 0,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "window.newWindowDimensions": "inherit",
+  "window.openFoldersInNewWindow": "on",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "explorer.confirmDelete": false,
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.fontSize": 15,
+  //代码格式化快捷键及保存时自动格式化
+  // "editor.formatOnType": true,
+  "editor.formatOnSave": true,
+}

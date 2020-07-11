@@ -31,6 +31,7 @@
     </div>
 </template>
 <script>
+import md5 from "md5";
 export default {
     layout: "login",
     data() {
@@ -39,10 +40,10 @@ export default {
                 captchaUrl: '',
             },
             ruleForm: {
-                email: '',
-                nickname: '',
-                passwd: '',
-                repasswd: '',
+                email: '1@qq.com',
+                nickname: 'kaixin',
+                passwd: '123456',
+                repasswd: '123456',
                 captcha: ''
             },
             rules: {
@@ -79,9 +80,24 @@ export default {
             this.code.captchaUrl = '/api/captcha?_t=' + new Date().getTime();
         },
         submitForm(formName) {
-            this.$refs[formName].validate((valid) => {                
+            this.$refs[formName].validate(async (valid) => {                
                 if (valid) {
-                    console.log('通过');
+                    console.log('校验通过');
+                    let obj = {
+                        email: this.ruleForm.email,
+                        nickname: this.ruleForm.nickname,
+                        passwd: md5(this.ruleForm.passwd),
+                        captcha: this.ruleForm.captcha
+                    }
+                    let res = await this.$http.post("/user/register", obj)
+                    if (res && res.succse) {
+                        this.$alert("注册成功", "成功", {
+                            confirmButtonText: "去登陆",
+                            callback: () => {
+                                this.$router.push("/login")
+                            }
+                        })
+                    }
                 }
             });
         },
