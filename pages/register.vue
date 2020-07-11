@@ -17,10 +17,10 @@
                 <el-input v-model="ruleForm.nickname" placeholder="请输入昵称"></el-input>
             </el-form-item>
             <el-form-item prop="passwd" label="密码">
-                <el-input v-model="ruleForm.passwd" placeholder="请输入密码"></el-input>
+                <el-input type="password" v-model="ruleForm.passwd" placeholder="请输入密码"></el-input>
             </el-form-item>
             <el-form-item prop="repasswd" label="确认密码">
-                <el-input v-model="ruleForm.repasswd" placeholder="请再次输入密码"></el-input>
+                <el-input type="password" v-model="ruleForm.repasswd" placeholder="请再次输入密码"></el-input>
             </el-form-item>
 
             <el-form-item>
@@ -82,14 +82,13 @@ export default {
         submitForm(formName) {
             this.$refs[formName].validate(async (valid) => {                
                 if (valid) {
-                    console.log('校验通过');
-                    let obj = {
+                    let data = {
                         email: this.ruleForm.email,
                         nickname: this.ruleForm.nickname,
                         passwd: md5(this.ruleForm.passwd),
                         captcha: this.ruleForm.captcha
                     }
-                    let res = await this.$http.post("/user/register", obj)
+                    let res = await this.$http.post("/user/register", data)
                     if (res && res.succse) {
                         this.$alert("注册成功", "成功", {
                             confirmButtonText: "去登陆",
