@@ -88,8 +88,8 @@ export default {
                         passwd: md5(this.ruleForm.passwd),
                         captcha: this.ruleForm.captcha
                     }
-                    let res = await this.$http.post("/user/register", data)
-                    if (res && res.succse) {
+                    let res = await this.$http.post("/user/register", data)                    
+                    if (res && res.success) {                        
                         this.$alert("注册成功", "成功", {
                             confirmButtonText: "去登陆",
                             callback: () => {
