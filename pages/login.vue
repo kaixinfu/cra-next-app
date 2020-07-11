@@ -93,9 +93,10 @@ export default {
                         emailCode: this.ruleForm.emailCode
                     }
                     let res = await this.$http.post("/user/login", data)                
-                    if (res && res.success) {        
+                    if (res && res.success) {                                
                         // 返回token：是将包含登录名、过期时间等信息加了密
                         this.$message.success("登录成功")
+                        localStorage.setItem("token", res.result.token)
                         this.$nextTick(() => {
                             this.$router.push("/")
                         }, 500)
