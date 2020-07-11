@@ -1,6 +1,6 @@
  <template>
     <div class="login-container">
-        <el-form class="login-form" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
+        <el-form class="login-form" :model="ruleForm" :rules="rules" ref="registerForm" label-width="100px">
             <div class="logo-container">
                 <img src="/logo.png" alt="">
             </div>
@@ -24,7 +24,7 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
+                <el-button type="primary" @click="submitForm('registerForm')">提交</el-button>
                 <el-button @click="resetForm('ruleForm')">重置</el-button>
             </el-form-item>
         </el-form>
