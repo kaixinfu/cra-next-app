@@ -18,13 +18,14 @@
 </template>
 <script>
 import md5 from "md5";
+import sparkMD5 from "spark-md5"
 export default {
     layout: "login",
     data() {
         return {
             file: null,
             uploadProgress: 0,
-            chunkSize: 0.5 * 1024 * 1024,
+            chunkSize: 0.1 * 1024 * 1024,
             hashPregress: 0
         }
     },
@@ -133,19 +134,49 @@ export default {
             })
         },
         async fnCalculateHashIdle(file) {
-            // let res = await 
+            let chunks = this.chunks
+            return new Promise(resolve => {
+                const spark = new sparkMD5.ArrayBuffer()
+                let count = 0
+                const appendToSpark = async file => {
+                    return new Promise(res => {
+                        const reader = new FileReader()
+                        // 按照数组的形式读进来？相当于把这个对象读在blob？
+                        reader.readAsArrayBuffer(file)
+                        reader.onload = e => {
+                            spark.append(e.target.result)
+                            res()
+                        }
+                    })
+                }
+                const workLoop = async deadLine => {
+                    while(count < chunks.length && deadLine.timeRemaining() > 1) {
+                        await appendToSpark(chunks[count].file)
+                        count ++
+                        if (count < chunks.length) {
+                            this.hashPregress = Number(
+                                ((100 * count) / chunks.length).toFixed(2)
+                            )
+                        } else {
+                            this.hashPregress = 100
+                            resolve(spark.end())
+                        }
+                    }
+                    window.requestIdleCallback(workLoop)
+                }
+                window.requestIdleCallback(workLoop)
+            })
         },
         /**
          * 先校验文件的格式
          */
         async fnUploadFile() {
             this.chunks = this.fnCreateFileChunk(this.file)
-
-            console.log("chunks", this.chunks);
-
-            const hash = await this.fnCalculateHashWorker(this.chunks)
+            const workerHash = await this.fnCalculateHashWorker(this.chunks)
+            const idleHash = await this.fnCalculateHashIdle(this.chunks)
             // hash是作为文件的唯一标识
-            console.log("hash:", hash);
+            console.log("workerHash:", workerHash);
+            console.log("idleHash:", idleHash);
             return
             let isImage = await this.fnIsImage(this.file)            
             if (!isImage) {
