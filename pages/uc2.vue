@@ -1,6 +1,6 @@
  <template>
     <div class="login-container">
-        <h1>普通文件上传</h1>
+        <h1>断点续传</h1>
         <div ref="drag" id="drag">
             <input type="file" name="file" @change="fnFileChanhe">
         </div>
@@ -9,6 +9,10 @@
         </div>
         <div>
             <el-button @click="fnUploadFile">上传</el-button>
+        </div>
+        <div>
+            <p>计算hash的进度：</p>
+            <el-progress :stroke-width="26" :text-inside="true" :percentage="hashPregress"></el-progress>
         </div>
     </div>
 </template>
@@ -19,7 +23,9 @@ export default {
     data() {
         return {
             file: null,
-            uploadProgress: 0
+            uploadProgress: 0,
+            chunkSize: 0.5 * 1024 * 1024,
+            hashPregress: 0
         }
     },
     computed: {
@@ -97,9 +103,50 @@ export default {
             this.file = file
         },
         /**
+         * 将文件切片
+         */
+        fnCreateFileChunk(file) {
+            let chunks = []
+            let cur = 0
+            while (cur < file.size) {
+                chunks.push({index: cur, file: file.slice(cur, cur + this.chunkSize)})
+                cur = cur + this.chunkSize
+            }
+            return chunks
+        },
+        // 计算md5值
+        async fnCalculateHashWorker() {
+            // new worker 是加载另外额外的一个js
+            // 就是开了一个主线程之外的进程
+            return new Promise(resolve => {
+                this.worker = new Worker("/hash.js")
+                // 注册两个事件，传递、回传
+                this.worker.postMessage({chunks: this.chunks})
+                this.worker.onmessage = e => {
+                    const {progress, hash} = e.data
+                    this.hashPregress = Number(progress.toFixed(2))
+                    // hash有值了，说明计算完了
+                    if (hash) {
+                        resolve(hash)
+                    }
+                }
+            })
+        },
+        async fnCalculateHashIdle(file) {
+            // let res = await 
+        },
+        /**
          * 先校验文件的格式
          */
         async fnUploadFile() {
+            this.chunks = this.fnCreateFileChunk(this.file)
+
+            console.log("chunks", this.chunks);
+
+            const hash = await this.fnCalculateHashWorker(this.chunks)
+            // hash是作为文件的唯一标识
+            console.log("hash:", hash);
+            return
             let isImage = await this.fnIsImage(this.file)            
             if (!isImage) {
                 console.log("err: ", "文件格式有误");
