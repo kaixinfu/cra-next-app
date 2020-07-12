@@ -43,14 +43,68 @@ export default {
                 drag.style.borderColor = "#eee"
             })
         },
+        /**
+         * blob构造函数是File
+         * FileReader读取文件
+         */
+        async blobToString(blob) {
+            return new Promise(resolve => {
+                const reader = new FileReader()
+                reader.onload = function() {
+                    // 1.将结果转为unicode编码，2.转成16进制，再转大写
+                    let res = reader.result.split('')
+                                .map(i => i.charCodeAt())
+                                .map(j => j.toString(16).toUpperCase())
+                                .join(' ')
+                    // 返回转换后的结果
+                    resolve(res)
+                }
+                // 调用读取文件方法
+                reader.readAsBinaryString(blob)
+            })
+        },
+        /**
+         * 判断图片文件头信息
+         * gif文件头前6个16进制 47 49 46 38 37 61，47 49 46 38 39 61
+         * GIF87A，GIF89A  每个字符ascii拿出来转成16进制
+         * 后四位表示宽高
+         */
+        async fnIsGif(file) {
+            let res = await this.blobToString(file.slice(0, 6))            
+            return res === "47 49 46 38 37 61" || res === "47 49 46 38 39 61"
+        },
+        // png是前八位
+        async fnIsPng(file) {
+            let res = await this.blobToString(file.slice(0, 8))                        
+            return res === "89 50 4E 47 0D 0A 1A 0A" || res === "89 50 4E 47 D A 1A A"
+        },
+        // jpg是头两位、后两位
+        async fnIsJpg(file) {
+            // file.size / 1024 就是文件大小
+            let start = await this.blobToString(file.slice(0, 2))
+            let end = await this.blobToString(file.slice(-2, file.size))    
+            return start === "FF D8" && end === "FF D9"
+        },
+        async fnIsImage(file) {
+            return await this.fnIsGif(file) || await this.fnIsPng(file) || await this.fnIsJpg(file)
+        },
         fnFileChanhe(e) {                        
-            const [file] = e.target.files            
+            const [file] = e.target.files
+            // 1.通过文件的后缀名判断文件格式，不准确，后缀名是可以修改的                     
             if (!file) {
                 return
             }
             this.file = file
         },
+        /**
+         * 先校验文件的格式
+         */
         async fnUploadFile() {
+            let isImage = await this.fnIsImage(this.file)            
+            if (!isImage) {
+                console.log("err: ", "文件格式有误");
+                return
+            }
             // 由于文件是二进制的，所有要放在formdata
             const formdata = new FormData()
             formdata.append("name", "file")
