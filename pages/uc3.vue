@@ -217,20 +217,8 @@ export default {
      */
     async fnUploadFile() {
       this.chunks = this.fnCreateFileChunk(this.file)
-      const workerHash = await this.fnCalculateHashWorker(this.chunks)
-      const idleHash = await this.fnCalculateHashIdle(this.chunks)
-      const sampleHash = await this.fnCalculateHashSample(this.chunks)
-      // hash是作为文件的唯一标识
-      console.log('workerHash:', workerHash)
-      console.log('idleHash:', idleHash)
-      console.log('sampleHash:', sampleHash)
-      return
-      let isImage = await this.fnIsImage(this.file)
-      if (!isImage) {
-        console.log('err: ', '文件格式有误')
-        return
-      }
-      // 由于文件是二进制的，所有要放在formdata
+      // 可以先用抽样hash判断是文件否已存在
+      const hash = await this.fnCalculateHashSample(this.chunks)
       const formdata = new FormData()
       formdata.append('name', 'file')
       formdata.append('file', this.file)

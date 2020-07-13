@@ -13,6 +13,7 @@
 - [√] 限制文件格式的两种格式
 - [√] 使用worker计算md5值
 - [√] 使用requestIdleCallback计算md5值
+- [√] 使用抽样hash方法，计算md5值
 
 ## 下载项目
 
