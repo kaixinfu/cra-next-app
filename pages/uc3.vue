@@ -14,6 +14,17 @@
       <p>计算hash的进度：</p>
       <el-progress :percentage="hashPregress" :stroke-width="26" :text-inside="true"></el-progress>
     </div>
+    <div :style="{width: chunkWidth + 'px'}" class="chunks-container">
+      <div :key="chunk.name" class="chunks-item" v-for="chunk in chunks">
+        <div
+          :class="{
+            'uploading': chunk.progress > 0 && chunk.progress < 100, 'success': chunk.progress === 100, 
+            'error': chunk.progress < 0}"
+        >
+          <i class="el-icon-loading" v-if="chunk.progress > 0 && chunk.progress < 100"></i>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -24,12 +35,28 @@ export default {
   data() {
     return {
       file: null,
-      uploadProgress: 0,
+      // uploadProgress: 0,
       chunkSize: 0.1 * 1024 * 1024,
       hashPregress: 0,
+      chunks: [],
     }
   },
-  computed: {},
+  computed: {
+    chunkWidth: function() {
+      return Math.ceil(Math.sqrt(this.chunks.length)) * 16
+    },
+    uploadProgress: function() {
+      if (!this.file || !this.chunks.length) {
+        return 0
+      }
+      let loaded = this.chunks
+        .map(item => {
+          return item.chunk.size * item.progress
+        })
+        .reduce((a, b) => a + b, 0)
+      return Number(((loaded / this.file.size) * 100).toFixed(2))
+    },
+  },
   methods: {
     fnBindEvent() {
       const drag = this.$refs.drag
@@ -216,17 +243,46 @@ export default {
      * 先校验文件的格式
      */
     async fnUploadFile() {
-      this.chunks = this.fnCreateFileChunk(this.file)
+      console.log('this', this.fnUploadChunks)
+
+      const chunks = this.fnCreateFileChunk(this.file)
       // 可以先用抽样hash判断是文件否已存在
       const hash = await this.fnCalculateHashSample(this.chunks)
-      const formdata = new FormData()
-      formdata.append('name', 'file')
-      formdata.append('file', this.file)
-      let res = await this.$http.post('/uploadFile', formdata, {
-        onUploadProgress: e => {
-          this.uploadProgress = Number(((e.loaded / e.total) * 100).toFixed(2))
-        },
+      // 给每个切片都加上hash的标识、索引。方便给后端再把这些切片组合成起来
+      this.chunks = chunks.map((chunk, index) => {
+        return {
+          hash,
+          name: `${hash}-${index}`,
+          index,
+          chunk: chunk.file,
+        }
       })
+      await this.fnUploadChunks()
+    },
+    async fnUploadChunks() {
+      // 将各个切片转换成formData对象
+      const requets = this.chunks.map(chunk => {
+        let keys = ['hash', 'name', 'chunk']
+        let formData = new FormData()
+        keys.forEach(key => {
+          formData.append(key, chunk[key])
+        })
+        return { form: formData }
+      })
+      // 将每个切片转换成promise对象，存起来
+      requets.map((request, i) => {
+        return this.$http.post('/uploadFile', request, {
+          onUploadProgress: e => {
+            // 这样子，每个切片都有自己的进度条了
+            this.chunks[i]['progress'] = Number(
+              ((e.loaded / e.total) * 100).toFixed(2),
+            )
+          },
+        })
+      })
+      // 异步数量的控制
+      // Promise.all有个问题，就是发起的请求过多，依然会使浏览器变得卡顿
+      await Promise.all(requets)
     },
   },
   async mounted() {
@@ -243,5 +299,28 @@ export default {
   line-height: 100px;
   border: 2px dashed #eee;
   text-align: center;
+}
+
+.chunks-container {
+  .chunks-item {
+    width: 14px;
+    height: 14px;
+    line-height: 12px;
+    border: 1px solid black;
+    background: #eee;
+    float: left;
+
+    >.success {
+      background: green;
+    }
+
+    >.uploading {
+      background: blue;
+    }
+
+    >.error {
+      background: red;
+    }
+  }
 }
 </style>
