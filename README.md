@@ -15,7 +15,7 @@
 - [√] 使用requestIdleCallback计算md5值
 - [√] 使用抽样hash方法，计算md5值
 - [√] 将大的文件切片，上传
-- [X] 断点续传
+- [-] 断点续传
 
 ## 下载项目
 
@@ -39,7 +39,8 @@ async blobToString(blob) {
     return new Promise(resolve => {
         const reader = new FileReader()
         reader.onload = function() {
-            // 1.将结果转为unicode编码，2.转成16进制，再转大写
+            // 1.将结果转为unicode编码，返回值是 0 - 65535 之间的整数
+            // 2.转成16进制，再转大写
             let res = reader.result.split('')
                         .map(i => i.charCodeAt())
                         .map(j => j.toString(16).toUpperCase())
@@ -52,3 +53,5 @@ async blobToString(blob) {
     })
 }
 ```
+### 后端项目地址：[egg-server](https://cn.vuejs.org/v2/guide/)
+### 友情推荐：[蜗牛老湿](https://github.com/shengxinjing)
