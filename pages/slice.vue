@@ -1,6 +1,6 @@
  <template>
   <div class="login-container">
-    <h1>断点续传</h1>
+    <h1>切片上传图片</h1>
     <div id="drag" ref="drag">
       <input @change="fnFileChanhe" name="file" type="file" />
     </div>
@@ -20,6 +20,7 @@
           :class="{
             'uploading': chunk.progress > 0 && chunk.progress < 100, 'success': chunk.progress === 100, 
             'error': chunk.progress < 0}"
+          :style="{height: chunk.progress + '%'}"
         >
           <i class="el-icon-loading" v-if="chunk.progress > 0 && chunk.progress < 100"></i>
         </div>
@@ -243,8 +244,6 @@ export default {
      * 先校验文件的格式
      */
     async fnUploadFile() {
-      console.log('this', this.fnUploadChunks)
-
       const chunks = this.fnCreateFileChunk(this.file)
       // 可以先用抽样hash判断是文件否已存在
       const hash = await this.fnCalculateHashSample(this.chunks)
@@ -255,6 +254,7 @@ export default {
           name: `${hash}-${index}`,
           index,
           chunk: chunk.file,
+          progress: 0
         }
       })
       await this.fnUploadChunks()
@@ -267,11 +267,11 @@ export default {
         keys.forEach(key => {
           formData.append(key, chunk[key])
         })
-        return { form: formData }
+        return formData
       })
       // 将每个切片转换成promise对象，存起来
       requets.map((request, i) => {
-        return this.$http.post('/uploadFile', request, {
+        return this.$http.post('/uploadSliceFile', request, {
           onUploadProgress: e => {
             // 这样子，每个切片都有自己的进度条了
             this.chunks[i]['progress'] = Number(
@@ -283,7 +283,12 @@ export default {
       // 异步数量的控制
       // Promise.all有个问题，就是发起的请求过多，依然会使浏览器变得卡顿
       await Promise.all(requets)
+      // 放合并文件请求
+      await this.mergeRequest()
     },
+    async mergeRequest() {
+      
+    }
   },
   async mounted() {
     let res = await this.$http.get('/user/info')
