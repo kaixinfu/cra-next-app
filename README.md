@@ -14,6 +14,8 @@
 - [√] 使用worker计算md5值
 - [√] 使用requestIdleCallback计算md5值
 - [√] 使用抽样hash方法，计算md5值
+- [√] 将大的文件切片，上传
+- [X] 断点续传
 
 ## 下载项目
 
