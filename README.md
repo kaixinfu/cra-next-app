@@ -53,5 +53,5 @@ async blobToString(blob) {
     })
 }
 ```
-### 后端项目地址：[egg-server](https://cn.vuejs.org/v2/guide/)
+### 后端项目地址：[egg-server](https://github.com/timer2/egg-server)
 ### 友情推荐：[蜗牛老湿](https://github.com/shengxinjing)
