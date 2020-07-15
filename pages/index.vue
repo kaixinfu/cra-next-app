@@ -3,6 +3,7 @@
     <el-button type="primary" @click="fnGoto('imageVaild')">校验文件格式</el-button>
     <el-button type="primary" @click="fnGoto('md5')">计算文件md5</el-button>
     <el-button type="primary" @click="fnGoto('sliceUpload')">切片上传图片</el-button>
+    <el-button type="primary" @click="fnGoto('fastUpload')">断点续传</el-button>
   </div>
 </template>
 
