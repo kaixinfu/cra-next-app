@@ -1,7 +1,6 @@
  <template>
     <div class="login-container">
-        <h1>校验文件格式：不上传后端，只校验格式。</h1>
-        <h1>可以随意修改文件后缀名，原理就是校验文件的头尾信息</h1>
+        <h1>校验文件格式：不上传后端，只校验格式</h1>
         <div ref="drag" id="drag">
             <input type="file" name="file" @change="fnFileChanhe">
         </div>

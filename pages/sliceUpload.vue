@@ -12,15 +12,16 @@
         <el-progress class="progress-style" :percentage="uploadProgress" :stroke-width="26" :text-inside="true"></el-progress>
       </el-form-item>
       <el-form-item label="每个切片大小">
-        <el-input-number v-model="num" :min="0.1" :step="0.1" :max="1" label="描述文字"></el-input-number>
+        <el-input-number :disabled="!!file" v-model="num" :min="0.1" :step="0.1" :max="1" label="描述文字"></el-input-number>
         <span>M</span>
       </el-form-item>
       <el-form-item label="每个切片宽高">
-        <el-input-number v-model="sliceWidth" :min="10" :step="1" :max="30" label="描述文字"></el-input-number>
+        <el-input-number :disabled="!!file" v-model="sliceWidth" :min="10" :step="1" :max="30" label="描述文字"></el-input-number>
         <span>px</span>
       </el-form-item>
       <el-form-item>
         <el-button @click="fnUploadFile">上传</el-button>
+        <!-- <el-button @click="fnClearPublic">删除文件夹</el-button> -->
       </el-form-item>
     </el-form>
     <div :style="{width: chunkWidth + 'px'}" class="chunks-container">
@@ -49,12 +50,13 @@ export default {
       num: 0.1,
       hashPregress: 0,
       chunks: [],
-      sliceWidth: 20
+      sliceWidth: 20,
+      merged: false
     }
   },
   computed: {
     chunkSize: function() {
-      return 1024 * 1024 * this.num
+      return Math.floor(1024 * 1024 * this.num)
     },
     chunkWidth: function() {
       return Math.ceil(Math.sqrt(this.chunks.length)) * this.sliceWidth
@@ -145,7 +147,7 @@ export default {
       if (!file) {
         return
       }
-      this.file = file
+      this.file = file   
     },
     /**
      * 将文件切片
@@ -259,12 +261,12 @@ export default {
     async fnUploadFile() {
       const chunks = this.fnCreateFileChunk(this.file)
       // 可以先用抽样hash判断是文件否已存在
-      const hash = await this.fnCalculateHashSample(this.chunks)
+      this.hash = await this.fnCalculateHashSample(this.chunks)
       // 给每个切片都加上hash的标识、索引。方便给后端再把这些切片组合成起来
       this.chunks = chunks.map((chunk, index) => {
         return {
-          hash,
-          name: `${hash}-${index}`,
+          hash: this.hash,
+          name: `${this.hash}-${index}`,
           index,
           chunk: chunk.file,
           progress: 0
@@ -300,7 +302,21 @@ export default {
       await this.mergeRequest()
     },
     async mergeRequest() {
-      
+      let data = {
+        ext: this.file.name.split(".").pop(),
+        size: this.chunkSize,
+        hash: this.hash
+      }
+      let res = await this.$http.post("/mergeUploadedSliceFile", data)
+      if (res && res.success) {
+        this.$message({
+          message: res.message,
+          type: 'success'
+        });
+      }
+    },
+    async fnClearPublic() {
+      let res = await this.$http.get('/clearPublic')
     }
   },
   async mounted() {
@@ -317,12 +333,13 @@ export default {
   line-height: 100px;
   border: 2px dashed #eee;
   text-align: center;
-  margin-bottom 20px
+  margin: 10px
 }
 .progress-style
   width: 500px
 
 .chunks-container {
+  margin: 10px
   .chunks-item {
     border: 1px solid black;
     background: #eee;
