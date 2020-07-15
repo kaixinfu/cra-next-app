@@ -15,7 +15,8 @@
       <el-progress :percentage="hashPregress" :stroke-width="26" :text-inside="true"></el-progress>
     </div>
     <div :style="{width: chunkWidth + 'px'}" class="chunks-container">
-      <div :key="chunk.name" class="chunks-item" v-for="chunk in chunks">
+      <div :key="chunk.name" class="chunks-item" v-for="chunk in chunks"
+           :style="{width: sliceWidth + 'px', height: sliceWidth + 'px', lineHeight: (sliceWidth - 2) + 'px'}">
         <div
           :class="{
             'uploading': chunk.progress > 0 && chunk.progress < 100, 'success': chunk.progress === 100, 
@@ -36,15 +37,15 @@ export default {
   data() {
     return {
       file: null,
-      // uploadProgress: 0,
       chunkSize: 0.1 * 1024 * 1024,
       hashPregress: 0,
       chunks: [],
+      sliceWidth: 20
     }
   },
   computed: {
     chunkWidth: function() {
-      return Math.ceil(Math.sqrt(this.chunks.length)) * 16
+      return Math.ceil(Math.sqrt(this.chunks.length)) * this.sliceWidth
     },
     uploadProgress: function() {
       if (!this.file || !this.chunks.length) {
@@ -55,7 +56,7 @@ export default {
           return item.chunk.size * item.progress
         })
         .reduce((a, b) => a + b, 0)
-      return Number(((loaded / this.file.size) * 100).toFixed(2))
+      return Number(((loaded / this.file.size)).toFixed(2))
     },
   },
   methods: {
@@ -308,9 +309,6 @@ export default {
 
 .chunks-container {
   .chunks-item {
-    width: 14px;
-    height: 14px;
-    line-height: 12px;
     border: 1px solid black;
     background: #eee;
     float: left;
