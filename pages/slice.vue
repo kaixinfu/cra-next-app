@@ -4,16 +4,25 @@
     <div id="drag" ref="drag">
       <input @change="fnFileChanhe" name="file" type="file" />
     </div>
-    <div>
-      <el-progress :percentage="uploadProgress" :stroke-width="26" :text-inside="true"></el-progress>
-    </div>
-    <div>
-      <el-button @click="fnUploadFile">上传</el-button>
-    </div>
-    <div>
-      <p>计算hash的进度：</p>
-      <el-progress :percentage="hashPregress" :stroke-width="26" :text-inside="true"></el-progress>
-    </div>
+    <el-form ref="form" label-width="120px">
+      <el-form-item label="计算hash的进度">
+        <el-progress class="progress-style" :percentage="hashPregress" :stroke-width="26" :text-inside="true"></el-progress>
+      </el-form-item>
+      <el-form-item label="上传文件的进度">
+        <el-progress class="progress-style" :percentage="uploadProgress" :stroke-width="26" :text-inside="true"></el-progress>
+      </el-form-item>
+      <el-form-item label="每个切片大小">
+        <el-input-number v-model="num" :min="0.1" :step="0.1" :max="1" label="描述文字"></el-input-number>
+        <span>M</span>
+      </el-form-item>
+      <el-form-item label="每个切片宽高">
+        <el-input-number v-model="sliceWidth" :min="10" :step="1" :max="30" label="描述文字"></el-input-number>
+        <span>px</span>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="fnUploadFile">上传</el-button>
+      </el-form-item>
+    </el-form>
     <div :style="{width: chunkWidth + 'px'}" class="chunks-container">
       <div :key="chunk.name" class="chunks-item" v-for="chunk in chunks"
            :style="{width: sliceWidth + 'px', height: sliceWidth + 'px', lineHeight: (sliceWidth - 2) + 'px'}">
@@ -37,13 +46,16 @@ export default {
   data() {
     return {
       file: null,
-      chunkSize: 0.1 * 1024 * 1024,
+      num: 0.1,
       hashPregress: 0,
       chunks: [],
       sliceWidth: 20
     }
   },
   computed: {
+    chunkSize: function() {
+      return 1024 * 1024 * this.num
+    },
     chunkWidth: function() {
       return Math.ceil(Math.sqrt(this.chunks.length)) * this.sliceWidth
     },
@@ -305,7 +317,10 @@ export default {
   line-height: 100px;
   border: 2px dashed #eee;
   text-align: center;
+  margin-bottom 20px
 }
+.progress-style
+  width: 500px
 
 .chunks-container {
   .chunks-item {
