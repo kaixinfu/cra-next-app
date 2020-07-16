@@ -5,6 +5,7 @@
     <el-button type="primary" @click="fnGoto('sliceUpload')">切片上传图片</el-button>
     <el-button type="primary" @click="fnGoto('reapirUpload')">断点续传</el-button>
     <el-button type="primary" @click="fnGoto('limitUpload')">控制并发上传</el-button>
+    <el-button type="primary" @click="fnGoto('errUpload')">报错重试上传</el-button>
   </div>
 </template>
 
