@@ -1,11 +1,16 @@
 <template>
-  <div class="container">
-    <el-button type="primary" @click="fnGoto('imageVaild')">校验文件格式</el-button>
-    <el-button type="primary" @click="fnGoto('md5')">计算文件md5</el-button>
-    <el-button type="primary" @click="fnGoto('sliceUpload')">切片上传图片</el-button>
-    <el-button type="primary" @click="fnGoto('reapirUpload')">断点续传</el-button>
-    <el-button type="primary" @click="fnGoto('limitUpload')">控制并发上传</el-button>
-    <el-button type="primary" @click="fnGoto('errUpload')">报错重试上传</el-button>
+  <div class="flex">
+    <div class="container">
+      <el-button type="primary" @click="fnGoto('imageVaild')">校验文件格式</el-button>
+      <el-button type="primary" @click="fnGoto('md5')">计算文件md5</el-button>
+      <el-button type="primary" @click="fnGoto('sliceUpload')">切片上传图片</el-button>
+      <el-button type="primary" @click="fnGoto('reapirUpload')">断点续传</el-button>
+      <el-button type="primary" @click="fnGoto('limitUpload')">控制并发上传</el-button>
+      <el-button type="primary" @click="fnGoto('errUpload')">报错重试上传</el-button>
+    </div>
+    <div class="container">
+      <el-button type="primary" @click="fnGoto('editor/new')">marked</el-button>
+    </div>
   </div>
 </template>
 
@@ -25,13 +30,15 @@ export default {
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
+.flex {
+  padding: 30px;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.container {
+  display: flex;
+  margin: 30px;
 }
 
 .title {
