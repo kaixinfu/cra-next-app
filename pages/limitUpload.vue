@@ -307,20 +307,6 @@ export default {
         })
         return {formData, index: chunk.index}
       })
-      // 将每个切片转换成promise对象，存起来
-      requets.map(({formData, index}) => {
-        return this.$http.post('/uploadSliceFile', formData, {
-          onUploadProgress: e => {
-            // 这样子，每个切片都有自己的进度条了
-            this.chunks[index]['progress'] = Number(
-              ((e.loaded / e.total) * 100).toFixed(2),
-            )
-          },
-        })
-      })
-      // 异步数量的控制
-      // Promise.all有个问题，就是发起的请求过多，依然会使浏览器变得卡顿
-      // await Promise.all(requets)
       await this.fnLimitUpload(requets)
       // 放合并文件请求
       await this.mergeRequest()
@@ -332,22 +318,24 @@ export default {
         let len = requets.length
         const startUpload = async () => {
           let task = requets.shift();
-          let res = await this.$http.post('/uploadSliceFile', task.formData, {
-            onUploadProgress: e => {
-              // 这样子，每个切片都有自己的进度条了
-              this.chunks[task.index]['progress'] = Number(
-                ((e.loaded / e.total) * 100).toFixed(2),
-              )
-            },
-          })
-          if (cur === (len - 1)) {
-            resolve()
-          } else {
-            cur ++
-            startUpload()
+          if (task) {
+            let res = await this.$http.post('/uploadSliceFile', task.formData, {
+              onUploadProgress: e => {
+                // 这样子，每个切片都有自己的进度条了
+                this.chunks[task.index]['progress'] = Number(
+                  ((e.loaded / e.total) * 100).toFixed(2),
+                )
+              },
+            })
+            if (cur === (len - 1)) {
+              resolve()
+            } else {
+              cur ++
+              startUpload()
+            }
           }
         }
-        while(limit) {
+        while(limit>0) {
           startUpload()
           limit --
         }
