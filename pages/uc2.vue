@@ -253,7 +253,7 @@ export default {
 #drag {
   height: 100px;
   line-height: 100px;
-  border: 2px dashed #eee;
+  border: 2px dashed #e8eaec;
   text-align: center;
 }
 </style>

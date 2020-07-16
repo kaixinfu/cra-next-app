@@ -1,6 +1,6 @@
  <template>
   <div class="login-container">
-    <h1>计算md5的三种方式</h1>
+    <div class="titile">计算md5的三种方式</div>
     <div id="drag" ref="drag">
       <input @change="fnFileChanhe" name="file" type="file" />
     </div>
@@ -249,10 +249,17 @@ export default {
 </script> 
 
 <style lang="stylus">
+.titile {
+  margin: 10px;
+  font-size:20px;
+  font-family:PingFangSC-Medium,PingFang SC;
+  font-weight:700;
+  color:rgba(51,51,51,1)
+}
 #drag {
   height: 100px;
   line-height: 100px;
-  border: 2px dashed #eee;
+  border: 2px dashed #e8eaec;
   text-align: center;
 }
 </style>

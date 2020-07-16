@@ -1,6 +1,6 @@
  <template>
   <div class="login-container">
-    <h1>秒传文件、断点续传</h1>
+    <div class="titile">秒传文件、断点续传</div>
     <div id="drag" ref="drag">
       <input @change="fnFileChanhe" name="file" type="file" />
     </div>
@@ -349,7 +349,7 @@ export default {
 #drag {
   height: 100px;
   line-height: 100px;
-  border: 2px dashed #eee;
+  border: 2px dashed #e8eaec;
   text-align: center;
   margin: 10px
 }
@@ -359,21 +359,28 @@ export default {
 .chunks-container {
   margin: 10px
   .chunks-item {
-    border: 1px solid black;
-    background: #eee;
+    border: 1px solid #dcdee2;
+    background: #f8f8f9;
     float: left;
 
     >.success {
-      background: green;
+      background: #19be6b;
     }
 
     >.uploading {
-      background: blue;
+      background: #4692FF;
     }
 
     >.error {
-      background: red;
+      background: #ed4014;
     }
   }
+}
+.titile {
+  margin: 10px;
+  font-size:20px;
+  font-family:PingFangSC-Medium,PingFang SC;
+  font-weight:700;
+  color:rgba(51,51,51,1)
 }
 </style>

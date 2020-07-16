@@ -1,6 +1,6 @@
  <template>
     <div class="login-container">
-        <h1>校验文件格式：不上传后端，只校验格式</h1>
+        <div class="titile">校验文件格式：不上传后端，只校验格式</div>
         <div ref="drag" id="drag">
             <input type="file" name="file" @change="fnFileChanhe">
         </div>
@@ -166,6 +166,13 @@ export default {
 </script> 
 
 <style lang="stylus">
+.titile {
+  margin: 10px;
+  font-size:20px;
+  font-family:PingFangSC-Medium,PingFang SC;
+  font-weight:700;
+  color:rgba(51,51,51,1)
+}
 #drag
     height 100px
     line-height 100px
