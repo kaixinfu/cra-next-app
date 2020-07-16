@@ -4,6 +4,7 @@
     <el-button type="primary" @click="fnGoto('md5')">计算文件md5</el-button>
     <el-button type="primary" @click="fnGoto('sliceUpload')">切片上传图片</el-button>
     <el-button type="primary" @click="fnGoto('reapirUpload')">断点续传</el-button>
+    <el-button type="primary" @click="fnGoto('limitUpload')">控制并发上传</el-button>
   </div>
 </template>
 
