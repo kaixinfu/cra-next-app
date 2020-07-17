@@ -4,7 +4,7 @@
     <div id="drag" ref="drag">
       <input @change="fnFileChanhe" name="file" type="file" />
     </div>
-    <el-form ref="form" label-width="120px">
+    <el-form ref="form" label-width="140px">
       <el-form-item label="计算hash的进度">
         <el-progress class="progress-style" :percentage="hashPregress" :stroke-width="26" :text-inside="true"></el-progress>
       </el-form-item>
@@ -19,9 +19,17 @@
         <el-input-number :disabled="!!file" v-model="sliceWidth" :min="10" :step="1" :max="30" label="描述文字"></el-input-number>
         <span>px</span>
       </el-form-item>
+      <el-form-item label="每个切片容错次数">
+        <el-input-number :disabled="!!file" v-model="errNum" :min="1" :step="1" :max="5" label="描述文字"></el-input-number>
+        <span>px</span>
+      </el-form-item>
       <el-form-item label="并发数量">
         <el-input-number :disabled="!!file" v-model="limit" :min="1" :step="1" :max="5" label="描述文字"></el-input-number>
         <span>个</span>
+      </el-form-item>
+      <el-form-item label="报错概率">
+        <el-input-number :disabled="!!file" v-model="err" :min="1" :step="1" :max="50" label="描述文字"></el-input-number>
+        <span>%</span>
       </el-form-item>
       <el-form-item>
         <el-button @click="fnUploadFile">上传</el-button>
@@ -53,6 +61,8 @@ export default {
       file: null,
       num: 0.1,
       limit: 3,
+      err: 15,
+      errNum: 3,
       hashPregress: 0,
       chunks: [],
       sliceWidth: 20,
@@ -305,6 +315,7 @@ export default {
         keys.forEach(key => {
           formData.append(key, chunk[key])
         })
+        formData.append("isErr", this.err / 100)
         return {formData, index: chunk.index, err: 0}
       })
       await this.fnLimitUpload(requets)
@@ -340,7 +351,7 @@ export default {
               }
             } catch(err) {
               this.chunks[task.index].progress = -1
-              if (task.err > 2) {
+              if (task.err > (this.errNum - 1)) {
                 isOver = true
                 reject()
               } else {
