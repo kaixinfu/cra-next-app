@@ -90,7 +90,7 @@ async blobToString(blob) {
 ####  [new Worker](https://github.com/timer2/cra-next-app/blob/master/static/hash.js)
 创建一个worker实例，注册传递、接收的两个监听函数。
 
-传进去切片数组，worker每计算完一个切片就发给主线程发信号，这个信号有返回返回计算的进度。等worker计算好了，再发一个信号，将结果发过来。
+传进去切片数组，worker每计算完一个切片或者计算完所有切片。就发给主线程发信号，这个信号有md5计算的进度。
 
 #### requestIdleCallback
 

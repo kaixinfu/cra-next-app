@@ -101,6 +101,8 @@ export default {
          * 后四位表示宽高
          */
         async fnIsGif(file) {
+            console.log("file", file);
+            
             let res = await this.blobToString(file.slice(0, 6))            
             return res === "47 49 46 38 37 61" || res === "47 49 46 38 39 61"
         },
