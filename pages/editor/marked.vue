@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         fnTextareaEvent() {
-            this.$ref.textarea.addEventListener("patse", e => {
+            this.$refs.textarea.addEventListener("patse", e => {
 
             })
         },

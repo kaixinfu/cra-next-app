@@ -1,36 +1,7 @@
-# cra-next-app
-
-## 包含
-
-- [x] [vue](https://cn.vuejs.org/v2/guide/)
-- [x] [nuxt](https://zh.nuxtjs.org/guide/installation)
-- [x] [axios](https://github.com/axios/axios)
-
-## 功能预览
-- [√] 注册、登录
-- [√] 普通文件上传
-- [√] 拖拽、进度条
-- [√] 限制文件格式的两种格式
-- [√] 使用worker计算md5值
-- [√] 使用requestIdleCallback计算md5值
-- [√] 使用抽样hash方法，计算md5值
-- [√] 切片上传：将大的文件切片上传,再将切片合并
-- [√] 断点续传：某些切片由于网路等其他原因丢失，续传补传切片
-- [√] 控制上传并发数量
-- [√] 报错重试、超过一定次数终止
-
-## 下载项目
-
-```sh
-$ git clone https://github.com/timer2/cra-next-app.git
-```
-```sh
-$ npm install
-```
-```sh
-$ npm run dev
-```
-### 文件上传问题
+### 校验文件格式
+大部分判断文件上传
+1.判断文件的后缀名，是否符合。这种校验方法，不准确，因为后缀名是可以任意修改的。
+2.
 限制文件格式的两种方式：
 1. 判断file文件的后缀名，假如修改文件后缀名，是可以通过前端校验的，所以不准确
 2. 通过判断文件的头信息，头信息是操作系统对文件的定义，每个格式文件的头信息是固定的，修改文件后缀名也改变不了头信息。
@@ -55,5 +26,3 @@ async blobToString(blob) {
     })
 }
 ```
-### 后端项目地址：[egg-server](https://github.com/timer2/egg-server)
-### 友情推荐：[蜗牛老湿](https://github.com/shengxinjing)
