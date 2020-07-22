@@ -31,5 +31,17 @@ $ npm install
 ```sh
 $ npm run dev
 ```
+
+## 本地查看mongo数据库
+
+```sh
+$ git clone https://github.com/mrvautin/adminMongo.git
+```
+```sh
+$ npm install
+```
+```sh
+$ npm start
+```
 ### 后端项目地址：[egg-server](https://github.com/timer2/egg-server)
 ### 友情推荐：[蜗牛老湿](https://github.com/shengxinjing)
