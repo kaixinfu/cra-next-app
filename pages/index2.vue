@@ -1,6 +1,16 @@
 <template>
-  <div class="container">
-    <virtual-list :articles="articles" :size="size"></virtual-list>>
+  <div class="flex">
+    <div class="container">
+      <el-button type="primary" @click="fnGoto('upload/imageVaild')">校验文件格式</el-button>
+      <el-button type="primary" @click="fnGoto('upload/md5')">计算文件md5</el-button>
+      <el-button type="primary" @click="fnGoto('upload/sliceUpload')">切片上传图片</el-button>
+      <el-button type="primary" @click="fnGoto('upload/reapirUpload')">断点续传</el-button>
+      <el-button type="primary" @click="fnGoto('upload/limitUpload')">控制并发上传</el-button>
+      <el-button type="primary" @click="fnGoto('upload/errUpload')">报错重试上传</el-button>
+    </div>
+    <div class="container">
+      <el-button type="primary" @click="fnGoto('editor/marked')">marked</el-button>
+    </div>
   </div>
 </template>
 
@@ -9,12 +19,6 @@ import Logo from '~/components/Logo.vue'
 import VirtualList from '~/components/VirtualList.vue'
 
 export default {
-  data() {
-    return {
-      size: 300,
-      articles: [{_id: 1, name: 'sf'}, {_id: 2, name: 'jf'}]
-    }
-  },
   components: {
     Logo,
     VirtualList

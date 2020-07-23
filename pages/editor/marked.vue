@@ -3,11 +3,11 @@
     <div class="btn">
         <el-button @click="fnSubmit" type="primary">提交</el-button>
     </div>
-    <el-row>
-        <el-col :span="12">
+    <el-row :gutter="20">
+        <el-col :span="11">
             <textarea ref="textarea" class="mark-left" :value="content" @input="fnContentChange"></textarea>
         </el-col>
-        <el-col :span="12">
+        <el-col :span="11">
             <div class="mark-right" v-html="markedCentent"></div>
         </el-col>
     </el-row>
@@ -41,7 +41,8 @@ export default {
             })
         },
         fnSubmit() {
-
+            console.log("this.content", this.content)
+            console.log("markedCentent", this.markedCentent)
         },
         fnContentChange(e) {
             clearTimeout(this.timer)

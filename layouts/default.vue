@@ -3,7 +3,8 @@
     <el-header>
       <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
         <el-menu-item index="1">
-          <span>logo</span>
+          <!-- <span>logo</span> -->
+          <nuxt-link to="/">首页</nuxt-link>
         </el-menu-item>
         <el-menu-item index="2">
           <nuxt-link to="/"></nuxt-link>
@@ -16,14 +17,14 @@
           <span>{{userInfo.nickname}}</span>
         </el-menu-item>
         <el-menu-item index="5" v-if="userInfo.id">
-          <nuxt-link to="/editor/new">写文章</nuxt-link>
+          <nuxt-link to="/editor/marked">写文章</nuxt-link>
         </el-menu-item>
 
         <el-menu-item index="6" v-if="!userInfo.id">
-          <nuxt-link to="/editor/new">注册</nuxt-link>
+          <nuxt-link to="/register">注册</nuxt-link>
         </el-menu-item>
         <el-menu-item index="7" v-if="!userInfo.id">
-          <nuxt-link to="/editor/new">登录</nuxt-link>
+          <nuxt-link to="/login">登录</nuxt-link>
         </el-menu-item>
 
       </el-menu>
